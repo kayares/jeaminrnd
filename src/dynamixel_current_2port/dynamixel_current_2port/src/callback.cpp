@@ -307,42 +307,62 @@ void Callback::SelectMotion()
     else if (res_mode == 1)
     {
         mode = 1;
-        trajectoryPtr->Go_Straight(0.05, 0.5);
+        IK_Ptr->Change_Com_Height(30);
+        trajectoryPtr->Go_Straight(0.05,0.5,0.05);
         IK_Ptr->Get_Step_n(trajectoryPtr->Return_Step_n());
-        IK_Ptr->Set_Angle_Compensation();
+        IK_Ptr->Change_Angle_Compensation(3.5,3.5,3.5,3.5,3.5,3.5);
+        IK_Ptr->Set_Angle_Compensation(135);
         trajectoryPtr->Stop_Trajectory_straightwalk(0.05);
         indext = 0;
     }
     else if (res_mode == 2)
     {
         mode = 2;
+        IK_Ptr->Change_Com_Height(30);
         trajectoryPtr->Side_Left2();
         IK_Ptr->Get_Step_n(trajectoryPtr->Return_Step_n());
-        IK_Ptr->Set_Angle_Compensation();
+        IK_Ptr->Change_Angle_Compensation(3.5,3.5,3.5,3.5,3.5,3.5);
+        IK_Ptr->Set_Angle_Compensation(135);
         indext = 0;
     }
     else if (res_mode == 3)
     {
         mode = 3;
+        IK_Ptr->Change_Com_Height(30);
         trajectoryPtr->Step_in_place(0.05, 0.5);
         IK_Ptr->Get_Step_n(trajectoryPtr->Return_Step_n());
-        IK_Ptr->Set_Angle_Compensation();
+        IK_Ptr->Change_Angle_Compensation(3.5,3.5,3.5,3.5,3.5,3.5);
+        IK_Ptr->Set_Angle_Compensation(135);
         indext = 0;
     }
     else if (res_mode == 4)
     {
         mode = 4;
+        IK_Ptr->Change_Com_Height(30);
         trajectoryPtr->Side_Right2();
         IK_Ptr->Get_Step_n(trajectoryPtr->Return_Step_n());
-        IK_Ptr->Set_Angle_Compensation();
+        IK_Ptr->Change_Angle_Compensation(3.5,3.5,3.5,3.5,3.5,3.5);
+        IK_Ptr->Set_Angle_Compensation(135);
         indext = 0;
     }
     else if (res_mode == 5)
     {
         mode = 5;
-        trajectoryPtr->Fast_Straight(0.05, 0.5);
+        IK_Ptr->Change_Com_Height(30);
+        trajectoryPtr->Freq_Change_Straight(0.05,0.5,0.05,1);
         IK_Ptr->Get_Step_n(trajectoryPtr->Return_Step_n());
-        IK_Ptr->Set_Angle_Compensation();
+        IK_Ptr->Change_Angle_Compensation(3.5,3.5,3.5,3.5,3.5,3.5);
+        IK_Ptr->Set_Angle_Compensation(67);
+        indext = 0;
+    }
+    else if (res_mode == 6)
+    {
+        mode = 6;
+        IK_Ptr->Change_Com_Height(80);
+        trajectoryPtr->Huddle_Motion(0.2, 0.12);
+        IK_Ptr->Get_Step_n(trajectoryPtr->Return_Step_n());
+        IK_Ptr->Change_Angle_Compensation(3.5,2.5,4.5,3.5,2.5,4.5);
+        IK_Ptr->Set_Angle_Compensation(135);
         indext = 0;
     }
     // //ros_info("mode(%d)", mode);
@@ -473,6 +493,12 @@ void Callback::Write_Leg_Theta()
 
             IK_Ptr->BRP_Simulation(trajectoryPtr->Ref_RL_x, trajectoryPtr->Ref_RL_y, trajectoryPtr->Ref_RL_z, trajectoryPtr->Ref_LL_x, trajectoryPtr->Ref_LL_y, trajectoryPtr->Ref_LL_z, indext);
             IK_Ptr->Fast_Angle_Compensation(indext);
+        }
+        else if (mode == 6)
+        {
+
+            IK_Ptr->BRP_Simulation(trajectoryPtr->Ref_RL_x, trajectoryPtr->Ref_RL_y, trajectoryPtr->Ref_RL_z, trajectoryPtr->Ref_LL_x, trajectoryPtr->Ref_LL_y, trajectoryPtr->Ref_LL_z, indext);
+            IK_Ptr->Angle_Compensation_Huddle(indext);
         }
     }
     else if (emergency == 1)
