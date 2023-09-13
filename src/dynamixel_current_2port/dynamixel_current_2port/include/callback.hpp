@@ -38,11 +38,15 @@ public:
     Left_2step = 2,
     Step_in_place = 3,
     Right_2step = 4,
-    Back_4step = 5,
-    Forward_Nstep = 6,
-    Huddle_Jump = 7,
+    Forward_Nstep = 5,
+    Huddle_Jump = 6,
+    ForWard_fast4step = 7,
     FWD_UP = 8,
     BWD_UP = 9,
+    Forward_Halfstep = 10,
+    Left_Halfstep = 11,
+    Right_Halfstep = 12,
+    Back_Halfstep = 13,
     NONE = 99,
   };
 
@@ -51,9 +55,13 @@ public:
   string Str_Left_2step = "Left_2step";
   string Str_Step_in_place = "Step_in_place";
   string Str_Right_2step = "Right_2step";
-  string Str_Back_4step = "Back_4step";
+  string Str_ForWard_fast4step = "ForWard_fast4step";
   string Str_Forward_Nstep = "Forward_Nstep";
   string Str_Huddle_Jump = "Huddle_Jump";
+  string Str_Forward_Halfstep = "Forward_Halfstep";
+  string Str_Left_Halfstep = "Left_Halfstep";
+  string Str_Right_Halfstep = "Right_Halfstep";
+  string Str_Back_Halfstep = "Back_Halfstep";
   string Str_FWD_UP = "FWD_UP";
   string Str_BWD_UP = "BWD_UP";
   string Str_NONE = "NONE";

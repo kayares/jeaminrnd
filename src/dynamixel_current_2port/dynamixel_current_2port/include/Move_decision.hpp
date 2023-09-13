@@ -21,21 +21,18 @@
 
 #include "img_proc.hpp"
 
-
-#define UD_MAX  90
-#define UD_MIN   0
+#define UD_MAX 90
+#define UD_MIN 0
 #define UD_CENTER 80
 
-#define RL_MAX  90
-#define RL_MIN  -90
-#define RL_CENTER 30
+#define RL_MAX 90
+#define RL_MIN -90
+#define RL_CENTER 0
 
-#define TURN_MAX  10
-#define TURN_MIN  -10
+#define TURN_MAX 90
+#define TURN_MIN -90
 
 using namespace std;
-
-
 
 class Move_Decision
 {
@@ -47,11 +44,15 @@ public:
         Left_2step = 2,
         Step_in_place = 3,
         Right_2step = 4,
-        Back_4step = 5,
-        Forward_Nstep = 6,
-        Huddle_Jump = 7,
+        Forward_Nstep = 5,
+        Huddle_Jump = 6,
+        ForWard_fast4step = 7,
         FWD_UP = 8,
         BWD_UP = 9,
+        Forward_Halfstep = 10,
+        Left_Halfstep = 11,
+        Right_Halfstep = 12,
+        Back_Halfstep = 13,
         NONE = 99,
     };
 
@@ -79,9 +80,13 @@ public:
     string Str_Left_2step = "Left_2step";
     string Str_Step_in_place = "Step_in_place";
     string Str_Right_2step = "Right_2step";
-    string Str_Back_4step = "Back_4step";
+    string Str_ForWard_fast4step = "ForWard_fast4step";
     string Str_Forward_Nstep = "Forward_Nstep";
     string Str_Huddle_Jump = "Huddle_Jump";
+    string Str_Forward_Halfstep = "Forward_Halfstep";
+    string Str_Left_Halfstep = "Left_Halfstep";
+    string Str_Right_Halfstep = "Right_Halfstep";
+    string Str_Back_Halfstep = "Back_Halfstep";
     string Str_FWD_UP = "FWD_UP";
     string Str_BWD_UP = "BWD_UP";
     string Str_NONE = "NONE";
@@ -184,7 +189,8 @@ public:
     bool Get_select_motion_on_flg() const;
     bool Get_turn_angle_on_flg() const;
     bool Get_emergency_on_flg() const;
-    
+    bool Get_distance_on_flg() const;
+
     bool Get_response_sent_() const;
 
     double Get_RL_NeckAngle() const;
@@ -226,6 +232,7 @@ public:
     void Set_select_motion_on_flg(bool select_motion_on_flg);
     void Set_turn_angle_on_flg(bool turn_angle_on_flg);
     void Set_emergency_on_flg(bool emergency_on_flg);
+    void Set_distance_on_flg(bool distance_on_flg);
 
     void Set_RL_NeckAngle(double RL_NeckAngle);
     void Set_UD_NeckAngle(double UD_NeckAngle);
@@ -243,9 +250,9 @@ public:
     /////////////////////// Line Mode ///////////////////////
     // StraightLine
     bool straightLine;
-    double margin_gradient = 15; // margin of straight line
+    double margin_gradient = 10; // margin of straight line
     void StraightLineDecision(double gra, double mg_gra);
-    double Angle_toBeStraight = 30; // max or min
+    double Angle_toBeStraight = 40; // max or min
     int8_t line_gradient = 0;
     double line_actual_angle = 0;
     int8_t line_motion = 0;
@@ -261,6 +268,7 @@ public:
     int8_t noline_motion = 0;
     double noline_actual_angle = 0;
     double Angle_ToFindLine = 30; // max or min
+    double noline_neckangle = 0;
 
     // Actural send turn angle
     double Actual_angle = 0;
@@ -292,6 +300,7 @@ public:
     double huddle_actual_angle = 0;
     int8_t huddle_motion = 0;
     double huddle_ud_neck_angle = 0;
+    std::vector<double> huddle_distance_save;
 
     /////////////////////// Corner Mode ///////////////////////
 
@@ -307,18 +316,26 @@ public:
     bool Turn90 = false;
 
     // corner shape ㅓ / ㅜ
-    int8_t tmp_corner_shape = 0;
-
     int8_t tmp_corner_seq = 0;
-    int8_t tmp_turn90 = 0;
-    double corner_distance = 0;
+
     double corner_actual_angle = 0;
+    int8_t tmp_corner_shape = 0;
+    int8_t tmp_turn90 = 0;
+
+    double corner_distance = 0;
+    std::vector<double> corner_distance_save;
+
     int8_t corner_motion = 0;
+    double corner_ud_neck_angle = 0;
 
     /////////////////////// Wall Mode ///////////////////////
     int8_t wall_motion = 0;
     int8_t img_wall_number_case = 0;
     int8_t wall_number_seq = 0;
+
+    /////////////////////// Sequence++ ///////////////////////
+    bool finish_past = false;
+    int8_t req_finish_count = 0;
 
     // check the variable sharing with multi thread
     int aaaa = 1;
@@ -326,6 +343,20 @@ public:
 
     int warning_counter = 0;
     bool warning_printed = false;
+
+    // ********************************************** BASKETBALL ************************************************** //
+    // DIR_UP 10
+    // DIR_DOWN 20
+    // DIR_LEFT 30
+    // DIR_RIGHT 40
+    // DIR_NONE 50
+    // DIR_UP_LEFT 60
+    // DIR_UP_RIGHT 70
+    // DIR_DOWN_LEFT 80
+    // DIR_DOWN_RIGHT 90
+    int tmp_goal_trace_direction = 0;
+    int8_t goal_trace_motion = 0;
+    double goal_trace_angle = 0;
 
 private:
     ros::NodeHandle nh;
@@ -338,7 +369,7 @@ private:
     {
         processed_requests_.insert(request_id);
     }
-   
+
     // Check if the request ID has already been processed
     bool isRequestProcessed(int request_id)
     {
@@ -385,6 +416,7 @@ private:
     bool select_motion_on_flg_ = false;
     bool turn_angle_on_flg_ = false;
     bool emergency_on_flg_ = false;
+    bool distance_on_flg_ = false;
 
     bool huddle_det_stop_flg_ = false;
     bool corner_det_stop_flg_ = false;
@@ -433,6 +465,7 @@ private:
     mutable std::mutex mtx_select_motion_on_flg_;
     mutable std::mutex mtx_turn_angle_on_flg_;
     mutable std::mutex mtx_emergency_on_flg_;
+    mutable std::mutex mtx_distance_on_flg_;
 
     mutable std::mutex mtx_Emergency_;
     mutable std::mutex mtx_ProcessON_;
