@@ -520,14 +520,14 @@ void Callback::Write_Leg_Theta()
         indext -= 1;
     }
 
-    All_Theta[0] = -IK_Ptr->RL_th[0];
+    All_Theta[0] = IK_Ptr->RL_th[0];
     All_Theta[1] = IK_Ptr->RL_th[1] - 1 * DEG2RAD;
     All_Theta[2] = IK_Ptr->RL_th[2] - 10.74 * DEG2RAD;
     All_Theta[3] = -IK_Ptr->RL_th[3] + 38.34 * DEG2RAD;
     All_Theta[4] = -IK_Ptr->RL_th[4] + 24.22 * DEG2RAD;
     All_Theta[5] = -IK_Ptr->RL_th[5];
-    All_Theta[6] = IK_Ptr->LL_th[0] + 2 * DEG2RAD;
-    All_Theta[7] = IK_Ptr->LL_th[1];
+    All_Theta[6] = -IK_Ptr->LL_th[0] ;
+    All_Theta[7] = IK_Ptr->LL_th[1]+ 2 * DEG2RAD;
     All_Theta[8] = -IK_Ptr->LL_th[2] + 10.74 * DEG2RAD;
     All_Theta[9] = IK_Ptr->LL_th[3] - 36.34 * DEG2RAD;
     All_Theta[10] = IK_Ptr->LL_th[4] - 24.22 * DEG2RAD;
