@@ -207,11 +207,11 @@ void Callback::Emergency()
 
 void Callback::Check_FSR()
 {
-    if (IK_Ptr->check_index == 0.05 && L_value == 0) // 오른발 들때 왼발 착지 확인
+    if (check_indext == 10 && R_value == 0) // 왼발 들때 오른발 착지 확인
     {
         indext -= 1;
     }
-    else if (IK_Ptr->check_index > 0.55 && R_value == 0) // 왼발 들때 오른발 착지 확인
+    else if (check_indext == 77 && L_value == 0) // 오른발 들때 왼발 착지 확인
     {
         indext -= 1;
     }
