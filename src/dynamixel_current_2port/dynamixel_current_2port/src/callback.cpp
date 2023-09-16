@@ -528,9 +528,9 @@ void Callback::Write_Leg_Theta()
     All_Theta[5] = -IK_Ptr->RL_th[5];
     All_Theta[6] = -IK_Ptr->LL_th[0] ;
     All_Theta[7] = IK_Ptr->LL_th[1]+ 2 * DEG2RAD;
-    All_Theta[8] = -IK_Ptr->LL_th[2] + 10.74 * DEG2RAD;
+    All_Theta[8] = -IK_Ptr->LL_th[2] + 11.74 * DEG2RAD;
     All_Theta[9] = IK_Ptr->LL_th[3] - 36.34 * DEG2RAD;
-    All_Theta[10] = IK_Ptr->LL_th[4] - 24.22 * DEG2RAD;
+    All_Theta[10] = IK_Ptr->LL_th[4] - 23.22 * DEG2RAD;
     All_Theta[11] = -IK_Ptr->LL_th[5];
 
     if (indext >= trajectoryPtr->Ref_RL_x.cols() && indext != 0)
